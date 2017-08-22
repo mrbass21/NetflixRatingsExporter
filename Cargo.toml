@@ -1,0 +1,6 @@
+[package]
+name = "NetflixRatingsExporter"
+version = "0.1.0"
+authors = ["Jason Beck <mrbass21@gmail.com>"]
+
+[dependencies]
