@@ -1,4 +1,4 @@
-##Introduction
+# Introduction
 
 The purpose of this project is, primarily, for me to learn Rust. It also happens that I love Netflix and hate the new
 ratings system, and wanted a way to backup my own ratings.
