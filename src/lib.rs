@@ -22,7 +22,7 @@ impl Config {
             match arg.as_ref() {
                 "-i" => config.ignore_removed_movies = true,
                 x if (x == "-h" || x == "--help" || x == "-?") => {
-                    return Err(String::from("Help Menu"));
+                    return Ok(ConfigResult::HelpMenu)
                 }
                 _ => {
                     return Err(format!("Unknown argument: {}", arg))

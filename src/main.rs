@@ -2,8 +2,8 @@ extern crate netflix_ratings_exporter;
 
 use std::env;
 use std::process;
-use netflix_ratings_exporter::Config;
-use netflix_ratings_exporter::ConfigResult;
+use netflix_ratings_exporter::{Config, ConfigResult};
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let config_result = Config::new(&args).unwrap_or_else(|err| {
