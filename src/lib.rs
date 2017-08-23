@@ -1,11 +1,16 @@
 use std::error::Error;
 
+pub enum ConfigResult {
+    HelpMenu,
+    Result(Config)
+}
+
 pub struct Config {
     pub ignore_removed_movies: bool,
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, String> {
+    pub fn new(args: &[String]) -> Result<ConfigResult, String> {
 
         let mut config = Config {ignore_removed_movies:false};
         
@@ -25,7 +30,7 @@ impl Config {
             }
         }
 
-        Ok(config)
+        Ok(ConfigResult::Result(config))
     }
 }
 
