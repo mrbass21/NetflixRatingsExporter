@@ -7,16 +7,24 @@ use netflix_ratings_exporter::Config;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {
-        println!("Error parsing arguments {}", err);
-        process::exit(1);
+
+        if(err != "Help Menu"){
+            println!("{}\n", err);
+            print_help();
+            process::exit(1);
+        } else {
+            print_help();
+            process::exit(0);
+        }
+        
+        
     });
 
-    println!("Value: {}", config.ignore_removed_movies);
 
 }
 
 fn print_help(){
-    println!("Usage:
--i
-    Ignore 'Movie' entries");
+    println!("Usage:\n");
+    println!("{:10} {}", "-i", "Ignore removed movies");
+    println!("{:10} {}", "-h", "Print help menu");
 }
