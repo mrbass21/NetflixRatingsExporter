@@ -22,7 +22,7 @@ fn main() {
 }
 
 fn print_help(){
-    println!("Usage:\n");
+    println!("nre.exe Usage:\n");
     println!("{:10} {}", "-i", "Ignore removed movies");
     println!("{:10} {}", "-h", "Print help menu");
 }
