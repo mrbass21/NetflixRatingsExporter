@@ -3,7 +3,7 @@ use std::error::Error;
 #[derive(PartialEq, Debug)]
 pub enum ConfigResult {
     HelpMenu,
-    Result(Config)
+    Result(Config),
 }
 
 #[derive(PartialEq, Debug)]
@@ -69,10 +69,23 @@ mod test {
     }
 
     #[test]
-    fn helpMenu() {
+    fn help_menu() {
         let args: Vec<String> = vec![String::from("ProgramName"), String::from("-h")];
 
         let config_result: ConfigResult = Config::new(&args).unwrap();
         assert_eq!(config_result, ConfigResult::HelpMenu);
+    }
+
+    #[test]
+    fn set_session_cookie() {
+        let args: Vec<String> = vec![String::from("ProgramName"), String::from("-c"), String::from("THIS_IS_A_COOKIE")];
+
+        let config_result = Config::new(&args);
+
+        assert!(config_result.is_ok());
+        
+        if let ConfigResult::Result(config) = config_result.unwrap() {
+            assert_eq!(config.session_cookie,"THIS_IS_A_COOKIE");
+        }
     }
 }
