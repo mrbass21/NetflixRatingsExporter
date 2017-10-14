@@ -1,22 +1,45 @@
 use std::error::Error;
 
 #[derive(PartialEq, Debug)]
-pub enum ConfigResult {
+pub enum ConfigResult <E>{
     HelpMenu,
-    Result(Config),
+    Ok,
+    Err(E),
 }
 
 #[derive(PartialEq, Debug)]
+pub enum MovieFilter {
+    None,
+    IgnoreRemoved,
+}
+
+
+#[derive(PartialEq, Debug)]
 pub struct Config {
-    pub ignore_removed_movies: bool,
-    pub session_cookie: String,
+    pub movie_filter: MovieFilter,
+    pub session_token: Option<String>,
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<ConfigResult, String> {
+    pub fn new() -> Config {
+        Config {
+            movie_filter: MovieFilter::None,
+            session_token: None,
+        }
+    }
 
-        let mut config = Config {ignore_removed_movies:false, session_cookie:String::new()};
+    pub fn set_movie_filter(&mut self, new_value: MovieFilter) -> &mut Config {
+        self.movie_filter = new_value;
+        self
+    }
 
+    pub fn set_session_token(&mut self, provided_session_token: String) -> &mut Config {
+        self.session_token = Some(provided_session_token);
+        self
+    }
+
+    pub fn from_args(&mut self , args: &[String]) -> ConfigResult<String> {
+        
         let mut skip_next = false;
         for (i, arg) in args.iter().enumerate() {
             if i == 0 || skip_next == true {
@@ -27,22 +50,22 @@ impl Config {
                 continue;
             }
             match arg.as_ref() {
-                "-i" => config.ignore_removed_movies = true,
+                "-i" => self.movie_filter = MovieFilter::IgnoreRemoved,
                 x if (x == "-h" || x == "--help" || x == "-?") => {
-                    return Ok(ConfigResult::HelpMenu)
+                    //TODO: Figure out how to handle this in a Builder pattern
+                    return ConfigResult::HelpMenu
                 },
                 x if (x == "-c" || x == "--cookie") => {
-                    //Can I get the next item here?
-                    config.session_cookie = (&args[i + 1]).to_owned();
+                    self.session_token = Some((args[i + 1]).to_owned());
                     skip_next = true;
                 },
                 _ => {
-                    return Err(format!("Unknown argument: {}", arg))
+                    return ConfigResult::Err(format!("Unknown argument: {}", arg))
                 },
             }
         }
 
-        Ok(ConfigResult::Result(config))
+        ConfigResult::Ok
     }
 }
 

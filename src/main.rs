@@ -6,18 +6,20 @@ use netflix_ratings_exporter::{Config, ConfigResult};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let config_result = Config::new(&args).unwrap_or_else(|err| {
-            println!("{}\n", err);
-            print_help();
-            process::exit(1);        
-    });
+    let mut config = Config::new();
+    let config_result = config.from_args(&args);
 
-    let config: Config = match config_result {
+    match config_result {
         ConfigResult::HelpMenu => {
             print_help();
             process::exit(0);
         },
-        ConfigResult::Result(config) => config,
+        ConfigResult::Err(error) => {
+            println!("{}\n", error);
+            print_help();
+            process::exit(1);
+        },
+        ConfigResult::Ok => ()
     };
 }
 
